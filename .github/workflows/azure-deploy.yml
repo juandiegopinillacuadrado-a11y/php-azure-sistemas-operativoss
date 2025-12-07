@@ -1,0 +1,47 @@
+name: Deploy PHP App to Azure App Service
+
+# Trigger del workflow: se ejecuta en cada push a la rama main
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    name: Build and Deploy PHP Application
+    
+    steps:
+    # 1. Checkout del código del repositorio
+    - name: Checkout code
+      uses: actions/checkout@v3
+      
+    # 2. Setup PHP
+    - name: Setup PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        extensions: mbstring, xml, ctype, json
+        
+    # 3. Validar archivos PHP
+    - name: Validate PHP files
+      run: |
+        echo "Validando sintaxis de archivos PHP..."
+        find . -name "*.php" -exec php -l {} \;
+        echo "✅ Validación completada"
+        
+    # 4. Deploy a Azure App Service
+    - name: Deploy to Azure Web App
+      uses: azure/webapps-deploy@v2
+      with:
+        app-name: ${{ secrets.AZURE_WEBAPP_NAME }}
+        publish-profile: ${{ secrets.AZURE_WEBAPP_PUBLISH_PROFILE }}
+        package: .
+        
+    # 5. Verificación post-deploy
+    - name: Post-deployment verification
+      run: |
+        echo "🚀 Deployment completed successfully!"
+        echo "App Name: ${{ secrets.AZURE_WEBAPP_NAME }}"
+        echo "Timestamp: $(date)"

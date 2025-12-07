@@ -1,0 +1,31 @@
+# IDE and Editor files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Azure files
+*.PublishSettings
+*.azurePubxml
+
+# PHP
+vendor/
+composer.phar
+composer.lock
+
+# Logs
+*.log
+logs/
+
+# Environment files
+.env
+.env.local
+
+# Backup files
+*.bak
+*.tmp
